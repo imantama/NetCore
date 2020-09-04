@@ -1,0 +1,14 @@
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\bin\Debug\netcoreapp2.1\NetCore.deps.json
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\bin\Debug\netcoreapp2.1\NetCore.runtimeconfig.json
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\bin\Debug\netcoreapp2.1\NetCore.runtimeconfig.dev.json
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\bin\Debug\netcoreapp2.1\NetCore.dll
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\bin\Debug\netcoreapp2.1\NetCore.pdb
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.csproj.CoreCompileInputs.cache
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.RazorAssemblyInfo.cache
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.RazorAssemblyInfo.cs
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.AssemblyInfoInputs.cache
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.AssemblyInfo.cs
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.RazorTargetAssemblyInfo.cache
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.dll
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.pdb
+C:\Users\imann\OneDrive\Documents\Visual Studio 2017\Projects\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.csprojAssemblyReference.cache
