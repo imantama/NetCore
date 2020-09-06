@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NetCore.Context;
+using NetCore.Model;
 //using NetCore.MyContext;
 
 namespace NetCore
@@ -30,6 +31,7 @@ namespace NetCore
         {
            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
            services.AddDbContext<MyContext>(options => options.UseSqlServer(Configuration.GetConnectionString("NetCore")));
+           services.AddIdentityCore<User>().AddEntityFrameworkStores<MyContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

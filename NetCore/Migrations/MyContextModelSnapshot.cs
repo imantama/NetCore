@@ -75,15 +75,18 @@ namespace NetCore.Migrations
 
             modelBuilder.Entity("NetCore.Model.UserRole", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("RoleId");
 
-                    b.Property<string>("Id");
+                    b.Property<string>("UserId");
 
-                    b.HasKey("UserId", "RoleId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tb_UserRole");
                 });
@@ -92,13 +95,11 @@ namespace NetCore.Migrations
                 {
                     b.HasOne("NetCore.Model.Role", "role")
                         .WithMany("userRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RoleId");
 
                     b.HasOne("NetCore.Model.User", "user")
                         .WithMany("userRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

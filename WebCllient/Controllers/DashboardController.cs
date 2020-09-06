@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebCllient.Controllers
@@ -10,7 +11,15 @@ namespace WebCllient.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            //if (HttpContext.Session.IsAvailable)
+            //{
+            //    return View();
+            //}
+            if (HttpContext.Session.GetString("lvl") == "Sales")
+            {
+                return View();
+            }
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

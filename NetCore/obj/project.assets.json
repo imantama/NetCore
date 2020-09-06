@@ -12590,11 +12590,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\imann\\OneDrive\\Documents\\Visual Studio 2017\\Projects\\NetCore\\NetCore\\NetCore.csproj",
+      "projectUniqueName": "D:\\GitHub\\NetCore\\NetCore\\NetCore.csproj",
       "projectName": "NetCore",
-      "projectPath": "C:\\Users\\imann\\OneDrive\\Documents\\Visual Studio 2017\\Projects\\NetCore\\NetCore\\NetCore.csproj",
+      "projectPath": "D:\\GitHub\\NetCore\\NetCore\\NetCore.csproj",
       "packagesPath": "C:\\Users\\imann\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\imann\\OneDrive\\Documents\\Visual Studio 2017\\Projects\\NetCore\\NetCore\\obj\\",
+      "outputPath": "D:\\GitHub\\NetCore\\NetCore\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

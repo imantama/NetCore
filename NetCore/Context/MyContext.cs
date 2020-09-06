@@ -27,21 +27,21 @@ namespace NetCore.Context
 
         //    //base.OnModelCreating(modelBuilder);
         //}
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<UserRole>()
-                .HasKey(ur => new { ur.UserId, ur.RoleId });
-            modelBuilder.Entity<UserRole>()
-                .HasOne(ur => ur.user)
-                .WithMany(b => b.userRoles)
-                .HasForeignKey(ur => ur.UserId);
-            modelBuilder.Entity<UserRole>()
-                .HasOne(ur => ur.role)
-                .WithMany(c => c.userRoles)
-                .HasForeignKey(ur => ur.RoleId);
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<UserRole>()
+        //        .HasKey(ur => new { ur.UserId, ur.RoleId });
+        //    modelBuilder.Entity<UserRole>()
+        //        .HasOne(ur => ur.user)
+        //        .WithMany(b => b.userRoles)
+        //        .HasForeignKey(ur => ur.UserId);
+        //    modelBuilder.Entity<UserRole>()
+        //        .HasOne(ur => ur.role)
+        //        .WithMany(c => c.userRoles)
+        //        .HasForeignKey(ur => ur.RoleId);
 
-            base.OnModelCreating(modelBuilder);
-        }
+        //    base.OnModelCreating(modelBuilder);
+        //}
     }
     
 

@@ -12610,11 +12610,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\imann\\OneDrive\\Documents\\Visual Studio 2017\\Projects\\NetCore\\WebCllient\\WebCllient.csproj",
+      "projectUniqueName": "D:\\GitHub\\NetCore\\WebCllient\\WebCllient.csproj",
       "projectName": "WebCllient",
-      "projectPath": "C:\\Users\\imann\\OneDrive\\Documents\\Visual Studio 2017\\Projects\\NetCore\\WebCllient\\WebCllient.csproj",
+      "projectPath": "D:\\GitHub\\NetCore\\WebCllient\\WebCllient.csproj",
       "packagesPath": "C:\\Users\\imann\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\imann\\OneDrive\\Documents\\Visual Studio 2017\\Projects\\NetCore\\WebCllient\\obj\\",
+      "outputPath": "D:\\GitHub\\NetCore\\WebCllient\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -12633,8 +12633,8 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "C:\\Users\\imann\\OneDrive\\Documents\\Visual Studio 2017\\Projects\\NetCore\\NetCore\\NetCore.csproj": {
-              "projectPath": "C:\\Users\\imann\\OneDrive\\Documents\\Visual Studio 2017\\Projects\\NetCore\\NetCore\\NetCore.csproj"
+            "D:\\GitHub\\NetCore\\NetCore\\NetCore.csproj": {
+              "projectPath": "D:\\GitHub\\NetCore\\NetCore\\NetCore.csproj"
             }
           }
         }
