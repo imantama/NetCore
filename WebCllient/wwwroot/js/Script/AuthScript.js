@@ -54,7 +54,7 @@
 
 function Register() {
     if ($('#confirmPass').val() == $('#Pass').val()) {
-        debugger;
+        //debugger;
         var auth = new Object();
         auth.Username = $('#Uname').val();
         auth.Email = $('#Email').val();
@@ -67,7 +67,7 @@ function Register() {
             dataType: "JSON",
             data: auth
         }).then((result) => {
-            debugger;
+            //debugger;
             if (result.status == true) {
                 $.notify({
                     // options
@@ -185,9 +185,9 @@ function Verify() {
         dataType: "JSON",
         data: validate
     }).then((result) => {
-        debugger;
+            debugger;
         if (result.status == true) {
-            window.location.href = "/index";
+            window.location.href = "/dashboard/index";
             //Login();
         } else {
             $.notify({

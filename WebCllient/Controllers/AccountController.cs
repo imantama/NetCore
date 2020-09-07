@@ -45,7 +45,7 @@ namespace WebCllient.Controllers
                 var buffer = System.Text.Encoding.UTF8.GetBytes(jsonUserVM);
                 var byteContent = new ByteArrayContent(buffer);
                 byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                var resTask = client.PostAsync("users/login/", byteContent);
+                var resTask = client.PostAsync("account/login/", byteContent);
                 resTask.Wait();
                 var result = resTask.Result;
                 if (result.IsSuccessStatusCode)
@@ -130,15 +130,15 @@ namespace WebCllient.Controllers
                     {
                         var json = JsonConvert.DeserializeObject(data).ToString();
                         var account = JsonConvert.DeserializeObject<UserVm>(json);
-                        if (account.RoleName == "Admin" || account.RoleName == "Sales")
+                        if (account.RoleName == "HR" || account.RoleName == "Sales")
                         {
                             HttpContext.Session.SetString("id", account.Id);
                             HttpContext.Session.SetString("uname", account.Username);
                             HttpContext.Session.SetString("email", account.Email);
                             HttpContext.Session.SetString("lvl", account.RoleName);
-                            if (account.RoleName == "Admin")
+                            if (account.RoleName == "HR")
                             {
-                                return Json(new { status = true, msg = "Login Successfully !", acc = "Admin" });
+                                return Json(new { status = true, msg = "Login Successfully !", acc = "HR" });
                             }
                             else
                             {

@@ -11,14 +11,14 @@ namespace WebCllient.Controllers
     {
         public IActionResult Index()
         {
-            //if (HttpContext.Session.IsAvailable)
-            //{
-            //    return View();
-            //}
-            if (HttpContext.Session.GetString("lvl") == "Sales")
+            if (HttpContext.Session.IsAvailable)
             {
                 return View();
             }
+            //if (HttpContext.Session.GetString("lvl") == "Sales")
+            //{
+            //    return View();
+            //}
             return RedirectToAction("Login", "Auth");
         }
     }

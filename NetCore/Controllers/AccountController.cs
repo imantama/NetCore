@@ -115,7 +115,7 @@ namespace NetCore.Controllers
 
                 var code = randDig.GenerateRandom();
                 var fill = "Hi " + userVm.Username + "\n\n"
-                          + "Try this Password to get into reset password: \n"
+                          + "Try this Password to get into login: \n"
                           + code
                           + "\n\nThank You";
 
