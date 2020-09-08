@@ -14,6 +14,11 @@ using NetCore.Context;
 using NetCore.Model;
 using NetCore.Services;
 using NetCore.ViewModel;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetCore.Controllers
 {
@@ -21,15 +26,17 @@ namespace NetCore.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        public IConfiguration _configuration;
         private readonly MyContext _context;
         private readonly UserManager<User> _userManager;
         AttrEmail attrEmail = new AttrEmail();
         RandomDigit randDig = new RandomDigit();
         SmtpClient client = new SmtpClient();
-        public AccountController(MyContext myContext, UserManager<User> userManager)
+        public AccountController(MyContext myContext, UserManager<User> userManager, IConfiguration config)
         {
             _context = myContext;
             _userManager = userManager;
+            _configuration = config;
 
         }
         [HttpPost]
@@ -56,16 +63,20 @@ namespace NetCore.Controllers
                         Username = getUserRole.user.UserName,
                         Email = getUserRole.user.Email,
                         RoleName = getUserRole.role.Name,
+
                     });
                 }
             }
             return BadRequest(500);
         }
+        [Authorize]
         [HttpPost]
         [Route("login")]
         public ActionResult Login(UserVm userVm)
         {
             var isExist = _context.users.Where(Q => Q.Email == userVm.Email || Q.UserName == userVm.Email).FirstOrDefault();
+            var getUserRole = _context.userRoles.Include("user").Include("role").SingleOrDefault(x => x.user.Email == userVm.Email);
+
             if (isExist == null)
             {
                 return BadRequest("User undefined");
@@ -80,24 +91,56 @@ namespace NetCore.Controllers
             }
             else
             {
-                var isValid = _context.userRoles.Where(A => A.UserId == isExist.Id).FirstOrDefault();
-                var isValidRole = _context.roles.Where(B => B.Id == isValid.RoleId).FirstOrDefault();
-                UserVm userVM = new UserVm()
+                //var isValid = _context.userRoles.Where(A => A.UserId == isExist.Id).FirstOrDefault();
+                //var isValidRole = _context.roles.Where(B => B.Id == isValid.RoleId).FirstOrDefault();
+                //UserVm userVM = new UserVm()
+                //{
+                //    Email = isExist.Email,
+                //    Id = isExist.Id,
+                //    Password = isExist.PasswordHash,
+                //    Username = isExist.UserName,
+                //    RoleName = isValidRole.Name,
+                if (isExist != null)
                 {
-                    Email = isExist.Email,
-                    Id = isExist.Id,
-                    Password = isExist.PasswordHash,
-                    Username = isExist.UserName,
-                    RoleName = isValidRole.Name
-                };
-                return Ok(userVM);
-            }
+                    if (getUserRole.user.SecurityStamp != null)
+                    {
+                        var claims = new List<Claim> {
 
+                        new Claim("Id", isExist.Id.ToString()),
+                        new Claim("UserName", isExist.UserName),
+                        new Claim("Email", isExist.Email),
+                        new Claim("VerifyCode", getUserRole.user.SecurityStamp)
+                        };
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+
+                        var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                        var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
+
+                        return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                    }
+                    else
+                    {
+                        var claims = new List<Claim> {
+                                new Claim("Id", getUserRole.user.Id),
+                                new Claim("Username", getUserRole.user.UserName),
+                                new Claim("Email", getUserRole.user.Email),
+                                new Claim("RoleName", getUserRole.role.Name)
+                            };
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                        var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
+                        return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                    }
+                   
+                }
+                return BadRequest("Invalid credentials");
+            }
+            
 
         }
 
-
-
+        [Authorize]
         [HttpPost]
         [Route("register")]
         public IActionResult Register(UserVm userVm)
@@ -151,19 +194,25 @@ namespace NetCore.Controllers
             }
             return BadRequest("Not Successfully");
         }
+        [Authorize]
         [HttpGet]
         public List<UserVm> GetAll()
         {
             List<UserVm> list = new List<UserVm>();
-            foreach (var item in _context.userRoles)
+            
+            foreach (var item in _context.users)
             {
-                UserVm role = new UserVm()
+                //var role = _context.userRoles.Where(r => r.UserId ==  ).FirstOrDefault();
+                UserVm user = new UserVm()
                 {
                     Id = item.Id,
-                    Username = item.RoleId
+                    Username = item.UserName,
+                    Email = item.Email, 
+                    Phone = item.PhoneNumber
+                    
 
                 };
-                list.Add(role);
+                list.Add(user);
             }
             return list;
         }

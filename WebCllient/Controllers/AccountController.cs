@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -53,23 +54,30 @@ namespace WebCllient.Controllers
                     var data = result.Content.ReadAsStringAsync().Result;
                     if (data != "")
                     {
-                        var json = JsonConvert.DeserializeObject(data).ToString();
-                        var account = JsonConvert.DeserializeObject<UserVm>(json);
+                        var handler = new JwtSecurityTokenHandler();
+                        var tokenS = handler.ReadJwtToken(data);
+                        var user = new UserVm();
+                        user.Id = tokenS.Claims.First(claim => claim.Type == "Id").Value;
+                        user.Username = tokenS.Claims.First(claim => claim.Type == "Username").Value;
+                        user.Email = tokenS.Claims.First(claim => claim.Type == "Email").Value;
+                        user.RoleName = tokenS.Claims.First(claim => claim.Type == "RoleName").Value;
+                        //var json = JsonConvert.DeserializeObject(data).ToString();
+                        //var account = JsonConvert.DeserializeObject<UserVm>(json);
                         //if (BC.Verify(userVM.Password, account.Password) && (account.RoleName == "Admin" || account.RoleName == "Sales"))
-                        if (account.VerifyCode != null)
+                        if (user.VerifyCode != null)
                         {
-                            if (userVm.VerifyCode != account.VerifyCode)
+                            if (userVm.VerifyCode != user.VerifyCode)
                             {
                                 return Json(new { status = true, msg = "Check your Code" });
                             }
                         }
-                        else if (account.RoleName == "HR" || account.RoleName == "Sales")
+                        else if (user.RoleName == "HR" || user.RoleName == "Sales")
                         {
-                            HttpContext.Session.SetString("id", account.Id);
-                            HttpContext.Session.SetString("uname", account.Username);
-                            HttpContext.Session.SetString("email", account.Email);
-                            HttpContext.Session.SetString("lvl", account.RoleName);
-                            if (account.RoleName == "HR")
+                            HttpContext.Session.SetString("id", user.Id);
+                            HttpContext.Session.SetString("uname", user.Username);
+                            HttpContext.Session.SetString("email", user.Email);
+                            HttpContext.Session.SetString("lvl", user.RoleName);
+                            if (user.RoleName == "HR")
                             {
                                 return Json(new { status = true, msg = "Login Successfully !", acc = "HR" });
                             }
@@ -181,6 +189,35 @@ namespace WebCllient.Controllers
         {
             HttpContext.Session.Clear();
             return Redirect("/login");
+        }
+        [Route("getjwt")]
+        public IActionResult GetName()
+        {
+            var stream = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImRiM2VhZmIxLTkyMWUtNDdmYS1hOGFiLTIwNDYxMzkxM2FlMCIsIlVzZXJuYW1lIjoiUmlmcXkiLCJFbWFpbCI6Im11aGFtbWFkcmlmcWkwQGdtYWlsLmNvbSIsIlJvbGVOYW1lIjoiU2FsZXMiLCJleHAiOjE1OTk1NDY0MTYsImlzcyI6IkludmVudG9yeUF1dGhlbnRpY2F0aW9uU2VydmVyIiwiYXVkIjoiSW52ZW50b3J5c2VydmljZVBvc3RtYW50Q2xpZW50In0.ziIjgvqJdH17w4HwHGzvXyZTUz41S06i0xHWGxAnY2M";
+            var handler = new JwtSecurityTokenHandler();
+            var tokenS = handler.ReadJwtToken(stream);
+            //var cek = tokenS.Payload;
+            //cek.u
+
+            //var jsonToken = handler.ReadToken(stream);
+            //var tokenS = handler.ReadToken(stream) as JwtSecurityToken;
+
+            //var id = tokenS.Claims.First(claim => claim.Type == "Id").Value;
+            //var uname = tokenS.Claims.First(claim => claim.Type == "Username").Value;
+            //var mail = tokenS.Claims.First(claim => claim.Type == "Email").Value;
+            //var role = tokenS.Claims.First(claim => claim.Type == "RoleName").Value;
+
+            var user = new UserVm()
+            {
+                Id = tokenS.Claims.First(claim => claim.Type == "Id").Value,
+                Username = tokenS.Claims.First(claim => claim.Type == "Username").Value,
+                Email = tokenS.Claims.First(claim => claim.Type == "Email").Value,
+                RoleName = tokenS.Claims.First(claim => claim.Type == "RoleName").Value,
+            };
+
+            var usrVm = new UserVm();
+            //return Json(user);
+            return Json(tokenS.Payload);
         }
     }
 }

@@ -15,6 +15,7 @@ namespace NetCore.Context
         public DbSet<User> users { get; set; }
         public DbSet<Role> roles { get; set; }
         public DbSet<UserRole> userRoles { get; set; }
+        public DbSet<Department> departments { get; set; }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    //modelBuilder.Entity<UserRole>().HasKey(sc => new { sc.UserId, sc.RoleId });

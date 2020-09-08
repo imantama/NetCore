@@ -25,3 +25,4 @@ D:\GitHub\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.AssemblyInfo.cs
 D:\GitHub\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.RazorTargetAssemblyInfo.cache
 D:\GitHub\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.dll
 D:\GitHub\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.pdb
+D:\GitHub\NetCore\NetCore\obj\Debug\netcoreapp2.1\NetCore.csprojAssemblyReference.cache
