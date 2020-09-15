@@ -11,5 +11,7 @@ namespace NetCore.Model
     public class User:IdentityUser
     {
         public ICollection<UserRole> userRoles { get; set; }
+
+        public Employee Employee { get; set; }
     }
 }

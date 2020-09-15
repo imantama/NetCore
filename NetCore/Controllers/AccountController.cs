@@ -69,7 +69,7 @@ namespace NetCore.Controllers
             }
             return BadRequest(500);
         }
-        [Authorize]
+        
         [HttpPost]
         [Route("login")]
         public ActionResult Login(UserVm userVm)
@@ -140,7 +140,7 @@ namespace NetCore.Controllers
 
         }
 
-        [Authorize]
+        
         [HttpPost]
         [Route("register")]
         public IActionResult Register(UserVm userVm)
@@ -186,14 +186,35 @@ namespace NetCore.Controllers
                 var uRole = new UserRole
                 {
                     UserId = user.Id,
-                    RoleId = "2"
+                    RoleId = "1"
                 };
                 _context.userRoles.Add(uRole);
+                var emp = new Employee
+                {
+                    EmployeeId = user.Id,
+                    CreateDate = DateTimeOffset.Now,
+                    isDelete = false
+                };
+                _context.employees.Add(emp);
                 _context.SaveChanges();
                 return Ok("Successfully Created");
             }
             return BadRequest("Not Successfully");
         }
+
+        [Route("logout")]
+        public IActionResult Logout()
+        {
+            //var jwtauthmanager = new IJwtAuthManager();
+            //var userName = User.Identity.Name;
+            //_jwtAuthManager.RemoveRefreshTokenByUserName(userName); // can be more specific to ip, user agent, device name, etc.
+            //_logger.LogInformation($"User [{userName}] logged out the system.");
+
+            //HttpContext.Session.Remove("lvl");
+            HttpContext.Session.Clear();
+            return Redirect("/login");
+        }
+
         [Authorize]
         [HttpGet]
         public List<UserVm> GetAll()
@@ -246,6 +267,27 @@ namespace NetCore.Controllers
             //_context.userRoles.Remove(getUserId);
             _context.SaveChanges();
             return Ok("Successfully Delete");
+        }
+
+        private string GetJWT(UserVm userVm)
+        {
+            var claims = new List<Claim> {
+                            new Claim("Id", userVm.Id),
+                            new Claim("Username", userVm.Username),
+                            new Claim("Email", userVm.Email),
+                            new Claim("RoleName", userVm.RoleName),
+                            new Claim("VerifyCode", userVm.VerifyCode == null ? "" : userVm.VerifyCode),
+                        };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                            _configuration["Jwt:Issuer"],
+                            _configuration["Jwt:Audience"],
+                            claims,
+                            expires: DateTime.UtcNow.AddDays(1),
+                            signingCredentials: signIn
+                        );
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
 

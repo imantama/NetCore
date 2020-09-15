@@ -16,6 +16,16 @@ namespace NetCore.Context
         public DbSet<Role> roles { get; set; }
         public DbSet<UserRole> userRoles { get; set; }
         public DbSet<Department> departments { get; set; }
+        public DbSet<Division> divisions { get; set; }
+        public object Divisions { get; internal set; }
+        public DbSet<Employee> employees { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Employee>()
+                        .HasOne<User>(e => e.user)
+                        .WithOne(u => u.Employee)
+                        .HasForeignKey<Employee>(u => u.EmployeeId);
+        }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    //modelBuilder.Entity<UserRole>().HasKey(sc => new { sc.UserId, sc.RoleId });

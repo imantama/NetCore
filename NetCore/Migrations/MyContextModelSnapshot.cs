@@ -40,6 +40,54 @@ namespace NetCore.Migrations
                     b.ToTable("Departments");
                 });
 
+            modelBuilder.Entity("NetCore.Model.Division", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTimeOffset>("CreateDate");
+
+                    b.Property<DateTimeOffset>("DeleteDate");
+
+                    b.Property<int>("DepartmentId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<DateTimeOffset>("UpdateDate");
+
+                    b.Property<bool>("isDelete");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("Division");
+                });
+
+            modelBuilder.Entity("NetCore.Model.Employee", b =>
+                {
+                    b.Property<string>("EmployeeId");
+
+                    b.Property<string>("Address");
+
+                    b.Property<DateTimeOffset>("CreateDate");
+
+                    b.Property<DateTimeOffset>("DeleteDate");
+
+                    b.Property<string>("EmployeeName");
+
+                    b.Property<string>("Phone");
+
+                    b.Property<DateTimeOffset>("UpdateDate");
+
+                    b.Property<bool>("isDelete");
+
+                    b.HasKey("EmployeeId");
+
+                    b.ToTable("Employee");
+                });
+
             modelBuilder.Entity("NetCore.Model.Role", b =>
                 {
                     b.Property<string>("Id")
@@ -110,6 +158,22 @@ namespace NetCore.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Tb_UserRole");
+                });
+
+            modelBuilder.Entity("NetCore.Model.Division", b =>
+                {
+                    b.HasOne("NetCore.Model.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("NetCore.Model.Employee", b =>
+                {
+                    b.HasOne("NetCore.Model.User", "user")
+                        .WithOne("Employee")
+                        .HasForeignKey("NetCore.Model.Employee", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("NetCore.Model.UserRole", b =>

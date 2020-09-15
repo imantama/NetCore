@@ -33,20 +33,18 @@ namespace NetCore.Base
             {
                 return Ok("mantap");
             }
-            return BadRequest("Create Succesfull");
-
-
+            return BadRequest("Create UnSuccesfull");
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<int>> Delete(int id)
         {
             var deleted = await _repo.Delete(id);
-            if (deleted.Equals(null))
+            if (!(deleted>0))
             {
                 return NotFound("Data is not found");
             }
-            return deleted;
+            return Ok();
         }
 
         [HttpPut]

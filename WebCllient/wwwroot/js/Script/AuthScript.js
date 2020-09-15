@@ -1,4 +1,5 @@
-﻿function Login() {
+﻿var arr = [];
+function Login() {
 	//debugger;
 	var validate = new Object();
 	validate.Email = $('#Email').val();
@@ -11,10 +12,15 @@
 		dataType: "JSON",
 		data: validate
 	}).then((result) => {
-		//debugger;
-		if (result.status == true) {
-			window.location.href = "/";
-        } else {            
+		debugger;
+        if (result.status == true) {
+            if (result.msg == "Check your Code") {
+                window.location.href = "/verify?mail=" + validate.Email;
+            } else {
+                window.location.href = "/";
+            }
+        }
+        else {            
 			$.notify({
 				// options
                 icon: 'fas fa-alarm-clock',
@@ -173,7 +179,7 @@ function Register() {
     }
 }
 function Verify() {
-    debugger;
+    //debugger;
     const urlParams = new URLSearchParams(window.location.search);
     var validate = new Object();
     validate.Email = urlParams.get('mail');
@@ -185,9 +191,9 @@ function Verify() {
         dataType: "JSON",
         data: validate
     }).then((result) => {
-            debugger;
+            //debugger;
         if (result.status == true) {
-            window.location.href = "/dashboard/index";
+            window.location.href = "/departments/index";
             //Login();
         } else {
             $.notify({

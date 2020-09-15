@@ -8,7 +8,7 @@ namespace NetCore.Services
     public class AttrEmail
     {
         public string mail = "imntama@gmail.com";
-        public string pass = "";
+        public string pass = "march2303";
     }
 
     public class RandomDigit

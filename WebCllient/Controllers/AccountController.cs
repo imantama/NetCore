@@ -23,7 +23,7 @@ namespace WebCllient.Controllers
         [Route("login")]
         public IActionResult Login()
         {
-            return View();
+            return View("~/Views/Account/Login.cshtml");
         }
 
         [Route("register")]
@@ -37,11 +37,17 @@ namespace WebCllient.Controllers
             return View();
         }
 
+        [Route("notfound")]
+        public IActionResult Notfound()
+        {
+            return View();
+        }
+
         [Route("validate")]
         public IActionResult Validate(UserVm userVm)
         {
             if (userVm.Username == null)
-            {
+            { // Login
                 var jsonUserVM = JsonConvert.SerializeObject(userVm);
                 var buffer = System.Text.Encoding.UTF8.GetBytes(jsonUserVM);
                 var byteContent = new ByteArrayContent(buffer);
@@ -52,38 +58,50 @@ namespace WebCllient.Controllers
                 if (result.IsSuccessStatusCode)
                 {
                     var data = result.Content.ReadAsStringAsync().Result;
-                    if (data != "")
+                    if (data != null)
                     {
+                        HttpContext.Session.SetString("token", "Bearer " + data);
                         var handler = new JwtSecurityTokenHandler();
                         var tokenS = handler.ReadJwtToken(data);
-                        var user = new UserVm();
-                        user.Id = tokenS.Claims.First(claim => claim.Type == "Id").Value;
-                        user.Username = tokenS.Claims.First(claim => claim.Type == "Username").Value;
-                        user.Email = tokenS.Claims.First(claim => claim.Type == "Email").Value;
-                        user.RoleName = tokenS.Claims.First(claim => claim.Type == "RoleName").Value;
+
+                        //var user = new UserVM();
+                        //user.Id = tokenS.Claims.First(claim => claim.Type == "Id").Value;
+                        //user.Username = tokenS.Claims.First(claim => claim.Type == "Username").Value;
+                        //user.Email = tokenS.Claims.First(claim => claim.Type == "Email").Value;
+                        //user.RoleName = tokenS.Claims.First(claim => claim.Type == "RoleName").Value;
+                        //user.VerifyCode = tokenS.Claims.First(claim => claim.Type == "VerifyCode").Value;
+
+                        var jwtPayloadSer = JsonConvert.SerializeObject(tokenS.Payload.ToDictionary(x => x.Key, x => x.Value));
+                        var jwtPayloadDes = JsonConvert.DeserializeObject(jwtPayloadSer).ToString();
+                        var account = JsonConvert.DeserializeObject<UserVm>(jwtPayloadSer);
+
                         //var json = JsonConvert.DeserializeObject(data).ToString();
-                        //var account = JsonConvert.DeserializeObject<UserVm>(json);
+                        //var account = JsonConvert.DeserializeObject<UserVM>(json);
                         //if (BC.Verify(userVM.Password, account.Password) && (account.RoleName == "Admin" || account.RoleName == "Sales"))
-                        if (user.VerifyCode != null)
+                        if (!account.VerifyCode.Equals(""))
                         {
-                            if (userVm.VerifyCode != user.VerifyCode)
+                            if (userVm.VerifyCode != account.VerifyCode)
                             {
                                 return Json(new { status = true, msg = "Check your Code" });
                             }
                         }
-                        else if (user.RoleName == "HR" || user.RoleName == "Sales")
+                        else if (account.RoleName == "Admin" || account.RoleName == "Sales" || account.RoleName == "HR")
                         {
-                            HttpContext.Session.SetString("id", user.Id);
-                            HttpContext.Session.SetString("uname", user.Username);
-                            HttpContext.Session.SetString("email", user.Email);
-                            HttpContext.Session.SetString("lvl", user.RoleName);
-                            if (user.RoleName == "HR")
+                            HttpContext.Session.SetString("id", account.Id);
+                            HttpContext.Session.SetString("uname", account.Username);
+                            HttpContext.Session.SetString("email", account.Email);
+                            HttpContext.Session.SetString("lvl", account.RoleName);
+                            if (account.RoleName == "Admin")
                             {
-                                return Json(new { status = true, msg = "Login Successfully !", acc = "HR" });
+                                return Json(new { status = true, msg = "Login Successfully !", acc = "Admin" });
+                            }
+                            else if (account.RoleName == "Sales")
+                            {
+                                return Json(new { status = true, msg = "Login Successfully !", acc = "Sales" });
                             }
                             else
                             {
-                                return Json(new { status = true, msg = "Login Successfully !", acc = "Sales" });
+                                return Json(new { status = true, msg = "Login Successfully !", acc = "HR" });
                             }
                         }
                         else
@@ -103,7 +121,7 @@ namespace WebCllient.Controllers
                 }
             }
             else if (userVm.Username != null)
-            {
+            { // Register
                 var json = JsonConvert.SerializeObject(userVm);
                 var buffer = System.Text.Encoding.UTF8.GetBytes(json);
                 var byteContent = new ByteArrayContent(buffer);
@@ -138,19 +156,23 @@ namespace WebCllient.Controllers
                     {
                         var json = JsonConvert.DeserializeObject(data).ToString();
                         var account = JsonConvert.DeserializeObject<UserVm>(json);
-                        if (account.RoleName == "HR" || account.RoleName == "Sales")
+                        if (account.RoleName == "HR" || account.RoleName == "Sales" || account.RoleName == "Admin")
                         {
                             HttpContext.Session.SetString("id", account.Id);
                             HttpContext.Session.SetString("uname", account.Username);
                             HttpContext.Session.SetString("email", account.Email);
                             HttpContext.Session.SetString("lvl", account.RoleName);
-                            if (account.RoleName == "HR")
+                            if (account.RoleName == "Admin")
                             {
-                                return Json(new { status = true, msg = "Login Successfully !", acc = "HR" });
+                                return Json(new { status = true, msg = "Login Successfully !", acc = "Admin" });
+                            }
+                            else if (account.RoleName == "Sales")
+                            {
+                                return Json(new { status = true, msg = "Login Successfully !", acc = "Sales" });
                             }
                             else
                             {
-                                return Json(new { status = true, msg = "Login Successfully !", acc = "Sales" });
+                                return Json(new { status = true, msg = "Login Successfully !", acc = "HR" });
                             }
                         }
                         else
@@ -187,9 +209,20 @@ namespace WebCllient.Controllers
         [Route("logout")]
         public IActionResult Logout()
         {
+            //var jwtauthmanager = new IJwtAuthManager();
+            //var userName = User.Identity.Name;
+            //_jwtAuthManager.RemoveRefreshTokenByUserName(userName); // can be more specific to ip, user agent, device name, etc.
+            //_logger.LogInformation($"User [{userName}] logged out the system.");
+
+            //HttpContext.Session.Remove("lvl");
             HttpContext.Session.Clear();
+
+
+            //HttpContext.Session.Abandon();
+            //HttpContext.Response.Cookies.Add(new HttpCookie("ASP.NET_SessionId", ""));
             return Redirect("/login");
         }
+
         [Route("getjwt")]
         public IActionResult GetName()
         {

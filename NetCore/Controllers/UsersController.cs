@@ -1,4 +1,5 @@
 ﻿using System;
+using Bcrypt = BCrypt.Net.BCrypt;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using NetCore.Context;
 using NetCore.Model;
 using NetCore.ViewModel;
+using NetCore.Services;
 
 namespace NetCore.Controllers
 {
@@ -19,6 +21,7 @@ namespace NetCore.Controllers
     {
        
         private readonly MyContext _context;
+        RandomDigit randDig = new RandomDigit();
         public UsersController(MyContext myContext) {
             _context = myContext;
         }
@@ -58,19 +61,36 @@ namespace NetCore.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserVm userVm)
         {
-            string hashPw = BCrypt.Net.BCrypt.HashPassword(userVm.Password);
-            var user = new User();
-            user.Id = userVm.Id;
-            user.UserName = userVm.Username;
-            user.Email = userVm.Email;
-            user.EmailConfirmed = false;
-            user.PasswordHash = hashPw;
-            user.PhoneNumber = userVm.Phone;
-            user.PhoneNumberConfirmed = false;
-            user.TwoFactorEnabled = false;
-            user.LockoutEnabled = false;
-            user.AccessFailedCount = 0;
-            var data = await _context.users.AddAsync(user);
+            var code = randDig.GenerateRandom();
+            var user = new User
+
+            {
+                //Id = uId.ToString(),
+                UserName = userVm.Username,
+                Email = userVm.Email,
+                SecurityStamp = code,
+                PasswordHash = Bcrypt.HashPassword(userVm.Password),
+                PhoneNumber = userVm.Phone,
+                EmailConfirmed = false,
+                PhoneNumberConfirmed = false,
+                TwoFactorEnabled = false,
+                LockoutEnabled = false,
+                AccessFailedCount = 0
+            };
+            _context.users.Add(user);
+            var uRole = new UserRole
+            {
+                UserId = user.Id,
+                RoleId = "2"
+            };
+            _context.userRoles.Add(uRole);
+            var emp = new Employee
+            {
+                EmployeeId = user.Id,
+                CreateDate = DateTimeOffset.Now,
+                isDelete = false
+            };
+            _context.employees.Add(emp);
             _context.SaveChanges();
             return Ok("Successfully Created");
             //return data;

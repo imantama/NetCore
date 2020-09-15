@@ -46,7 +46,7 @@ namespace NetCore.Repository
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<TEntity>> GetAll()
+        public virtual async Task<List<TEntity>> GetAll()
         {
             var getAll = await _context.Set<TEntity>().Where(i => i.isDelete == false).ToListAsync();
             if (!getAll.Count().Equals(0))
@@ -59,6 +59,8 @@ namespace NetCore.Repository
             }
             
         }
+        
+
 
         public async Task<TEntity> GetById(int id)
         {

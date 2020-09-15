@@ -37,6 +37,7 @@ namespace NetCore
            services.AddDbContext<MyContext>(options => options.UseSqlServer(Configuration.GetConnectionString("NetCore")));
            services.AddIdentityCore<User>().AddEntityFrameworkStores<MyContext>();
            services.AddScoped<DepartmentRepo>();
+            services.AddScoped<DivisionRepo>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
